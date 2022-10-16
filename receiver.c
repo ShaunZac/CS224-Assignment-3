@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     int len, n, num; 
     int next_num;
 
-    num = 1;
+    num = 12;
 
     len = sizeof(cliaddr);  //len is value/result 
     
@@ -54,8 +54,11 @@ int main(int argc, char* argv[]) {
         buffer[n] = '\0';
 
         char* msg;
-        int next_num = atoi(&buffer[0]) + 1;
-        asprintf(&msg, "%d message\n", next_num);
+        int received_num;
+        sscanf(buffer, "%*[^0123456789]%d", &received_num);
+        printf("Received number %d\n", received_num);
+        int next_num = received_num + 1;
+        asprintf(&msg, "Acknowledgement:%d\n", next_num);
 
         printf("Sender : %s\n", buffer);
         sendto(sockfd, (char *)msg, strlen(msg),  

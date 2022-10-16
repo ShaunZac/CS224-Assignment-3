@@ -38,21 +38,21 @@ int main() {
 	int n, len;
 	int num = 0;
 	char* msg;
-	int p = 1;
+	int p = 12;
 	bool lost = 0;
 	int num_rec;
 
 	while(num < p){
 		lost = 1;
 		num++;
-		asprintf(&msg, "%d message\n", num);
+		asprintf(&msg, "Packet:%d\n", num);
 		printf("%s\n", msg);
 
 		sendto(sockfd, (char *)msg, strlen(msg),
 			2048, (const struct sockaddr *) &servaddr,
 				sizeof(servaddr));
 
-		printf("message sent.\n");
+		printf("Message sent.\n");
 				
 		start = clock();
 		while(1){
@@ -62,7 +62,9 @@ int main() {
 
 
 			if(n > 0){
-				if(atoi(&buffer[0]) == num + 1){ //get the seg number from the message
+				int received_num;
+        		sscanf(buffer, "%*[^0123456789]%d", &received_num);
+				if(received_num == num + 1){ //get the seg number from the message
 					lost = 0;
 					printf("not lost\n");
 				}
