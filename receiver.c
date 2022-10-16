@@ -56,7 +56,6 @@ int main(int argc, char* argv[]) {
         char* msg;
         int received_num;
         sscanf(buffer, "%*[^0123456789]%d", &received_num);
-        printf("Received number %d\n", received_num);
         int next_num = received_num + 1;
         asprintf(&msg, "Acknowledgement:%d\n", next_num);
 
