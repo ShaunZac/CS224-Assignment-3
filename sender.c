@@ -1,9 +1,10 @@
 // Client side implementation of UDP client-server model
-#include<time.h>
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdbool.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -14,7 +15,15 @@
 #define MAXLINE 1024
 	
 // Driver code
-int main() {
+int main(int argc, char* argv[]) {
+	if(argc != 5)
+    return -1;
+
+    int rec_port = atoi(argv[1]);
+    int sen_port = atoi(argv[2]);
+    float rtt = atof(argv[3]);
+	int p = atoi(argv[4]);
+
 	int sockfd;
 	char buffer[MAXLINE];
 	char *hello = "Hello from sender";
@@ -38,7 +47,6 @@ int main() {
 	int n, len;
 	int num = 0;
 	char* msg;
-	int p = 12;
 	bool lost = 0;
 	int num_rec;
 
@@ -66,7 +74,7 @@ int main() {
         		sscanf(buffer, "%*[^0123456789]%d", &received_num);
 				if(received_num == num + 1){ //get the seg number from the message
 					lost = 0;
-					printf("not lost\n");
+					printf("Successful tx\n");
 				}
 				else{
 					lost = 1;
@@ -75,8 +83,7 @@ int main() {
 			}
 
 			end = clock();
-			if((( (double) (end - start)) / CLOCKS_PER_SEC) > 1){
-				printf("Did not receive a message :(\n");
+			if((( (double) (end - start)) / CLOCKS_PER_SEC) > rtt){
 				lost = 1;
 				break;
 			}
@@ -85,7 +92,7 @@ int main() {
 
 		if(lost){
 			num--;
-			printf("lost\n");
+			printf("Packet lost\n");
 			continue;
 		}
 
